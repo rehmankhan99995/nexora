@@ -58,6 +58,16 @@
   }
 }
 
+.nexora-auth { background: #0b0b18; color: #f8f7ff; }
+.auth-story { position: relative; overflow: hidden; width: 55%; background: radial-gradient(circle at 18% 20%, rgba(104, 80, 220, .3), transparent 28%), linear-gradient(140deg, #151331 0%, #0f1025 55%, #0a0b17 100%); }
+.auth-story::after { content: ""; position: absolute; inset: 0; opacity: .12; background-image: linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px); background-size: 56px 56px; mask-image: linear-gradient(to bottom, black, transparent 75%); }
+.auth-panel { background: #0b0b18; }
+.auth-stat { display: flex; align-items: center; gap: .55rem; border: 1px solid rgba(255,255,255,.1); border-radius: 999px; padding: .65rem .8rem; background: rgba(255,255,255,.04); }
+.auth-orbit { position: absolute; border: 1px solid rgba(175, 153, 255, .16); border-radius: 999px; transform: rotate(-24deg); }
+.orbit-one { width: 680px; height: 220px; right: -160px; top: 25%; }
+.orbit-two { width: 660px; height: 220px; right: -140px; top: 31%; }
+.auth-dashboard-art { position: absolute; right: 11%; bottom: 17%; width: 280px; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; padding: 20px; background: rgba(21, 20, 48, .72); box-shadow: 0 24px 80px rgba(0,0,0,.35); backdrop-filter: blur(16px); }
+
 @layer base {
   * {
     @apply border-border;

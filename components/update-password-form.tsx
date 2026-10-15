@@ -1,80 +1,10 @@
 "use client";
-
-import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
+import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import { useActionState, useState } from "react";
+import { updatePasswordAction } from "@/lib/auth-actions";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-export function UpdatePasswordForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
-  const handleForgotPassword = async (
-    e: React.SubmitEvent<HTMLFormElement>,
-  ) => {
-    e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-          <CardDescription>
-            Please enter your new password below.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleForgotPassword}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="password">New password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="New password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save new password"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+import { useFormStatus } from "react-dom";
+function SubmitButton() { const { pending } = useFormStatus(); return <Button className="h-12 w-full rounded-xl bg-violet-500 text-white hover:bg-violet-400" disabled={pending}>{pending ? "Updating..." : "Update password"}</Button>; }
+export function UpdatePasswordForm() { const [state, formAction] = useActionState(updatePasswordAction, {}); const [showPassword, setShowPassword] = useState(false); return <div className="space-y-8"><div><p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">Secure recovery</p><h2 className="text-3xl font-semibold tracking-[-0.03em] text-white">Choose a new password</h2><p className="mt-3 text-sm leading-6 text-slate-400">Your new password will protect access to your workspace.</p></div><form action={formAction} className="space-y-5"><div><label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-200">New password</label><div className="relative"><LockKeyhole className="pointer-events-none absolute left-3 top-3.5 text-slate-500" size={17} /><Input id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" required className="h-12 rounded-xl border-white/10 bg-white/[.04] pl-10 pr-11 text-white focus-visible:ring-violet-400" /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"} className="absolute right-3 top-3 text-slate-500 hover:text-white">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div></div><div><label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium text-slate-200">Confirm new password</label><Input id="confirmPassword" name="confirmPassword" type={showPassword ? "text" : "password"} autoComplete="new-password" required className="h-12 rounded-xl border-white/10 bg-white/[.04] text-white focus-visible:ring-violet-400" /></div>{state.error && <p role="alert" className="rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2 text-sm text-red-200">{state.error}</p>}<SubmitButton /><Link href="/login" className="block text-center text-sm text-slate-400 hover:text-white">Back to sign in</Link></form></div>; }
