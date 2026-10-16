@@ -96,6 +96,42 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
 
 6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
 
+## Google OAuth setup
+
+The login and signup pages use Supabase Auth's browser `signInWithOAuth` flow. The browser starts Google OAuth at `/auth/callback?next=/dashboard`; the callback exchanges the authorization code with the server-side Supabase client and only then redirects to the protected dashboard. OAuth errors return to `/auth/login` with a generic message. No Google secret or OAuth token is stored in the app.
+
+### Environment variables
+
+Set these in `.env.local` for development and in the production deployment environment:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=[SUPABASE PROJECT URL]
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[SUPABASE PUBLISHABLE OR ANON KEY]
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+Use the deployed HTTPS origin for `NEXT_PUBLIC_SITE_URL` in production, for example `https://app.example.com`. Do not put a Google client secret in this file or in frontend code.
+
+### Google Cloud Console
+
+1. Open [Google Cloud Console](https://console.cloud.google.com/) and create or select a project.
+2. Configure the OAuth consent screen under **Google Auth Platform**. Set the application name, support email, authorized domain, and scopes required by the app. Publish the app when required for external users.
+3. Under **Google Auth Platform → Clients**, create an OAuth client ID for a **Web application**.
+4. Add the local and production application origins as authorized JavaScript origins, such as `http://localhost:3000` and `https://app.example.com`.
+5. Add the **Supabase Auth callback URL shown in Supabase Dashboard → Authentication → Providers → Google** as the authorized redirect URI. This is normally a Supabase URL, not this app's `/auth/callback` URL.
+6. Copy the client ID and client secret into the Supabase dashboard provider configuration only.
+
+### Supabase Dashboard
+
+1. Open **Authentication → Providers → Google** and enable Google.
+2. Enter the Google client ID and client secret, then save the provider.
+3. Open **Authentication → URL Configuration** and set the Site URL to the production app origin.
+4. Add the development and production app callback destinations to Additional Redirect URLs, including `http://localhost:3000/auth/callback` and `https://app.example.com/auth/callback`.
+5. Keep email verification enabled if the application requires verified email accounts, and confirm the email templates use the app's `/auth/confirm` or `/auth/callback` routes as appropriate.
+6. Apply the profile migration so new email and Google users receive one idempotent `profiles` row. Existing Row Level Security policies remain in force.
+
+Google OAuth cannot be fully end-to-end tested until the Google client and Supabase provider are configured. After configuration, test both `/login` and `/signup`, cancellation, callback failure, dashboard access, and repeated sign-ins with the same Google account.
+
 > Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
 
 ## Feedback and issues

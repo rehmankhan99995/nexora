@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export type AuthActionState = { error?: string; success?: string };
+export type AuthActionState = { error?: string; success?: string; redirectTo?: string };
 
 const passwordMessage = "Use at least 8 characters, including an uppercase letter, a lowercase letter, and a number.";
 
@@ -22,7 +22,7 @@ function isValidPassword(password: string) {
 
 async function getOrigin() {
   const requestHeaders = await headers();
-  return requestHeaders.get("origin") ?? "http://localhost:3000";
+  return process.env.NEXT_PUBLIC_SITE_URL ?? requestHeaders.get("origin") ?? "http://localhost:3000";
 }
 
 export async function signInAction(_previousState: AuthActionState, formData: FormData): Promise<AuthActionState> {
@@ -32,7 +32,7 @@ export async function signInAction(_previousState: AuthActionState, formData: Fo
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: "We could not sign you in with those details." };
-  redirect("/dashboard");
+  return { success: "Signed in.", redirectTo: "/dashboard" };
 }
 
 export async function signUpAction(_previousState: AuthActionState, formData: FormData): Promise<AuthActionState> {
@@ -50,11 +50,11 @@ export async function signUpAction(_previousState: AuthActionState, formData: Fo
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { full_name: fullName }, emailRedirectTo: `${await getOrigin()}/auth/callback?next=/dashboard` },
+    options: { data: { full_name: fullName }, emailRedirectTo: `${await getOrigin()}/auth/callback?next=/auth/verified` },
   });
   if (error) return { error: "We could not create your account with those details." };
-  if (data.session) redirect("/dashboard");
-  redirect("/auth/sign-up-success");
+  if (data.session) return { success: "Your workspace is ready.", redirectTo: "/dashboard" };
+  return { success: "Account created. Check your email to confirm your account.", redirectTo: "/auth/sign-up-success" };
 }
 
 export async function forgotPasswordAction(_previousState: AuthActionState, formData: FormData): Promise<AuthActionState> {

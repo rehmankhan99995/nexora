@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const requestedNext = searchParams.get("next");
   const next = requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
     ? requestedNext
-    : "/dashboard";
+    : "/auth/verified";
 
   if (token_hash && type) {
     const supabase = await createClient();

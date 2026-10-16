@@ -58,7 +58,7 @@
   }
 }
 
-.nexora-auth { background: #0b0b18; color: #f8f7ff; }
+.nexora-auth { display: flex; background: #0b0b18; color: #f8f7ff; }
 .auth-story { position: relative; overflow: hidden; width: 55%; background: radial-gradient(circle at 18% 20%, rgba(104, 80, 220, .3), transparent 28%), linear-gradient(140deg, #151331 0%, #0f1025 55%, #0a0b17 100%); }
 .auth-story::after { content: ""; position: absolute; inset: 0; opacity: .12; background-image: linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px); background-size: 56px 56px; mask-image: linear-gradient(to bottom, black, transparent 75%); }
 .auth-panel { background: #0b0b18; }
@@ -67,6 +67,41 @@
 .orbit-one { width: 680px; height: 220px; right: -160px; top: 25%; }
 .orbit-two { width: 660px; height: 220px; right: -140px; top: 31%; }
 .auth-dashboard-art { position: absolute; right: 11%; bottom: 17%; width: 280px; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; padding: 20px; background: rgba(21, 20, 48, .72); box-shadow: 0 24px 80px rgba(0,0,0,.35); backdrop-filter: blur(16px); }
+
+.nexora-avatar-wrap { display: flex; justify-content: center; }
+.nexora-avatar { position: relative; width: 188px; height: 176px; animation: nexora-float 5s ease-in-out infinite; }
+.nexora-avatar-art { position: relative; z-index: 1; width: 100%; height: 100%; overflow: visible; }
+.nexora-avatar-aura { position: absolute; inset: 25px 10px 8px; border-radius: 48%; background: radial-gradient(ellipse, rgba(167, 139, 250, .22), transparent 68%); filter: blur(8px); }
+.nexora-avatar-shadow { position: absolute; bottom: 1px; left: 26%; width: 48%; height: 10px; border-radius: 50%; background: rgba(0,0,0,.35); filter: blur(6px); }
+.nexora-avatar-antenna, .nexora-avatar-brow, .nexora-avatar-mouth, .nexora-avatar-neck, .nexora-avatar-hand { fill: none; stroke: #c4b5fd; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.nexora-avatar-antenna { stroke: #a78bfa; }
+.nexora-avatar-antenna-light { fill: #c4b5fd; filter: drop-shadow(0 0 5px #c4b5fd); }
+.nexora-avatar-ear, .nexora-avatar-head, .nexora-avatar-body { fill: #f8f7ff; stroke: #d8d4e8; stroke-width: 2; }
+.nexora-avatar-face { fill: #17152a; stroke: #7566b5; stroke-width: 3; }
+.nexora-avatar-eyes ellipse { fill: #c4b5fd; filter: drop-shadow(0 0 5px #a78bfa); transition: transform .25s ease; }
+.nexora-avatar-eye-glint { fill: #fff; }
+.nexora-avatar-mouth { stroke: #c4b5fd; stroke-width: 4; }
+.nexora-avatar-neck { stroke: #a78bfa; }
+.nexora-avatar-chest { fill: #8b5cf6; opacity: .9; }
+.nexora-avatar-hand { stroke: #f8f7ff; stroke-width: 9; }
+.nexora-avatar-password .nexora-avatar-hand-left { transform: translate(21px, -35px) rotate(-12deg); }
+.nexora-avatar-password .nexora-avatar-hand-right { transform: translate(-21px, -35px) rotate(12deg); }
+.nexora-avatar-password .nexora-avatar-eyes { opacity: .2; }
+.nexora-avatar-typing .nexora-avatar-eyes ellipse { transform: translateX(3px); }
+.nexora-avatar-loading .nexora-avatar-eyes { animation: nexora-pulse 1.2s ease-in-out infinite; }
+.nexora-avatar-loading .nexora-avatar-mouth { stroke-dasharray: 5 7; }
+.nexora-avatar-error .nexora-avatar-brow { transform: translateY(3px) rotate(8deg); transform-origin: 120px 86px; }
+.nexora-avatar-error .nexora-avatar-mouth { transform: rotate(180deg); transform-origin: 120px 120px; }
+.nexora-avatar-success .nexora-avatar-eyes, .nexora-avatar-verified .nexora-avatar-eyes { filter: drop-shadow(0 0 8px #c4b5fd); }
+.nexora-avatar-success .nexora-avatar-mouth, .nexora-avatar-verified .nexora-avatar-mouth { stroke-width: 6; }
+.nexora-avatar-scan { position: absolute; z-index: 2; left: 31%; top: 58px; width: 38%; height: 2px; background: #c4b5fd; box-shadow: 0 0 10px #c4b5fd; animation: nexora-scan 1.6s ease-in-out infinite; }
+.nexora-avatar-sparkles { position: absolute; z-index: 2; top: 15px; right: 17px; color: #c4b5fd; font-size: 24px; animation: nexora-sparkle 1s ease-out both; }
+@keyframes nexora-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes nexora-pulse { 50% { opacity: .65; transform: scale(1.05); } }
+@keyframes nexora-scan { 0%, 100% { transform: translateY(0); opacity: .2; } 50% { transform: translateY(23px); opacity: 1; } }
+@keyframes nexora-sparkle { from { opacity: 0; transform: scale(.5) rotate(-20deg); } to { opacity: 1; transform: scale(1) rotate(12deg); } }
+@media (prefers-reduced-motion: reduce) { .nexora-avatar, .nexora-avatar-loading .nexora-avatar-eyes, .nexora-avatar-scan, .nexora-avatar-sparkles { animation: none; } }
+@media (max-width: 1023px) { .nexora-auth { display: block; } }
 
 @layer base {
   * {
