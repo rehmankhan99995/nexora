@@ -10,7 +10,7 @@ import { AuthShell } from "@/components/auth-shell";
 import { NexoraAvatar } from "@/components/nexora-avatar";
 
 export default function Page() {
-  return <AuthShell><div className="space-y-6"><NexoraAvatar emotion="success" statusText="Your account was created. Email verification is still required." /><div className="flex flex-col gap-6">
+  return <AuthShell showAccountTabs={false}><div className="space-y-6"><NexoraAvatar emotion="success" statusText="Your account was created. Email verification is still required." /><div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">

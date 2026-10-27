@@ -3,21 +3,32 @@ import { connection } from "next/server";
 import { Command, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/logout-button";
-import { getWorkspaceForUser } from "@/lib/workspace";
+import { getWorkspacesForUser } from "@/lib/workspace";
 import { WorkspaceLogoManager } from "@/components/workspace-logo-manager";
 import { getWorkspaceLogoUrl } from "@/lib/workspace-storage";
+import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 
 export const instant = false;
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ workspace?: string }>;
+}) {
   await connection();
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
 
   if (!data.user) redirect("/login");
 
-  const { data: workspace } = await getWorkspaceForUser(supabase, data.user.id);
-  if (!workspace) redirect("/workspace/setup");
+  const { data: workspaces, error: workspacesError } = await getWorkspacesForUser(
+    supabase,
+    data.user.id,
+  );
+  if (workspacesError || workspaces.length === 0) redirect("/workspace/setup");
+
+  const params = searchParams ? await searchParams : {};
+  const workspace = workspaces.find((item) => item.id === params.workspace) ?? workspaces[0];
 
   const logoUrl = await getWorkspaceLogoUrl(supabase, data.user.id, workspace);
 
@@ -67,6 +78,10 @@ export default async function DashboardPage() {
         <div className="mt-4 rounded-2xl border border-violet-400/20 bg-violet-400/10 p-6">
           <p className="text-sm text-violet-200">Next up</p>
           <p className="mt-3 text-lg font-medium">Connect your operating signals</p>
+        </div>
+
+        <div className="mt-4">
+          <WorkspaceSwitcher workspaces={workspaces} activeWorkspaceId={workspace.id} />
         </div>
 
         <div className="mt-4 max-w-xl rounded-2xl border border-white/10 bg-white/[.04] p-6">

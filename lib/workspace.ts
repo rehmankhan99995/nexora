@@ -27,6 +27,9 @@ export type Workspace = {
   updated_at: string;
 };
 
+export type WorkspaceRole = "owner" | "admin" | "member";
+export type WorkspaceWithRole = Workspace & { role: WorkspaceRole };
+
 type WorkspaceFields = {
   businessName: string;
   industry: string;
@@ -52,9 +55,29 @@ export async function getWorkspaceForUser(
   supabase: SupabaseClient,
   userId: string,
 ) {
-  return supabase
-    .from("workspaces")
-    .select("id, business_name, industry, logo_path, created_at, updated_at")
-    .eq("owner_id", userId)
-    .maybeSingle<Workspace>();
+  const result = await getWorkspacesForUser(supabase, userId);
+  return {
+    data: result.data[0] ?? null,
+    error: result.error,
+  };
+}
+
+export async function getWorkspacesForUser(
+  supabase: SupabaseClient,
+  userId: string,
+) {
+  const { data, error } = await supabase
+    .from("workspace_members")
+    .select("role, workspace:workspaces(id, business_name, industry, logo_path, created_at, updated_at)")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  const workspaces = (data ?? [])
+    .filter((membership) => membership.workspace)
+    .map((membership) => ({
+      ...(membership.workspace as unknown as Workspace),
+      role: membership.role as WorkspaceRole,
+    })) as WorkspaceWithRole[];
+
+  return { data: workspaces, error };
 }

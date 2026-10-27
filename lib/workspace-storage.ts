@@ -105,6 +105,13 @@ export function isWorkspaceLogoPath(
   ).test(path);
 }
 
+export function isWorkspaceLogoPathForWorkspace(path: string, workspaceId: string) {
+  const escapedWorkspaceId = workspaceId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(
+    `^[^/]+/${escapedWorkspaceId}/logo-[0-9a-f-]+\\.(png|jpg|jpeg|webp)$`,
+  ).test(path);
+}
+
 export async function uploadWorkspaceLogo(
   supabase: SupabaseClient,
   userId: string,
@@ -136,7 +143,7 @@ export async function getWorkspaceLogoUrl(
   userId: string,
   workspace: Workspace,
 ) {
-  if (!workspace.logo_path || !isWorkspaceLogoPath(workspace.logo_path, userId, workspace.id)) {
+  if (!workspace.logo_path || !isWorkspaceLogoPathForWorkspace(workspace.logo_path, workspace.id)) {
     return null;
   }
 

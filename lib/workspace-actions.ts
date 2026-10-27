@@ -9,7 +9,7 @@ import type { Workspace } from "@/lib/workspace";
 import {
   deleteWorkspaceLogo,
   isWorkspaceLogoFile,
-  isWorkspaceLogoPath,
+  isWorkspaceLogoPathForWorkspace,
   uploadWorkspaceLogo,
   validateWorkspaceLogo,
 } from "@/lib/workspace-storage";
@@ -55,7 +55,6 @@ async function setWorkspaceLogoPath(
     .from("workspaces")
     .update({ logo_path: logoPath, updated_at: new Date().toISOString() })
     .eq("id", workspaceId)
-    .eq("owner_id", userId)
     .select("id")
     .maybeSingle();
 
@@ -93,7 +92,7 @@ async function replaceWorkspaceLogo(
 
   if (
     workspace.logo_path &&
-    isWorkspaceLogoPath(workspace.logo_path, userId, workspace.id)
+    isWorkspaceLogoPathForWorkspace(workspace.logo_path, workspace.id)
   ) {
     const cleanupError = await deleteWorkspaceLogo(supabase, workspace.logo_path);
     if (cleanupError) {
@@ -195,11 +194,7 @@ export async function updateWorkspaceLogoAction(
     }
 
     if (
-      !isWorkspaceLogoPath(
-        current.workspace.logo_path,
-        current.user.id,
-        current.workspace.id,
-      )
+      !isWorkspaceLogoPathForWorkspace(current.workspace.logo_path, current.workspace.id)
     ) {
       return { error: "The saved logo path is invalid. Please contact support." };
     }
