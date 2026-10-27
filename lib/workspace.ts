@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+export const MAX_WORKSPACE_LOGO_BYTES = 2 * 1024 * 1024;
+
 export const INDUSTRIES = [
   "Technology & Software",
   "Professional Services",

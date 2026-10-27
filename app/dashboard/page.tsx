@@ -4,6 +4,8 @@ import { Command, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/logout-button";
 import { getWorkspaceForUser } from "@/lib/workspace";
+import { WorkspaceLogoManager } from "@/components/workspace-logo-manager";
+import { getWorkspaceLogoUrl } from "@/lib/workspace-storage";
 
 export const instant = false;
 
@@ -16,6 +18,8 @@ export default async function DashboardPage() {
 
   const { data: workspace } = await getWorkspaceForUser(supabase, data.user.id);
   if (!workspace) redirect("/workspace/setup");
+
+  const logoUrl = await getWorkspaceLogoUrl(supabase, data.user.id, workspace);
 
   const fullName = data.user.user_metadata?.full_name;
   const name = (typeof fullName === "string" ? fullName : "").split(" ")[0] || "there";
@@ -63,6 +67,14 @@ export default async function DashboardPage() {
         <div className="mt-4 rounded-2xl border border-violet-400/20 bg-violet-400/10 p-6">
           <p className="text-sm text-violet-200">Next up</p>
           <p className="mt-3 text-lg font-medium">Connect your operating signals</p>
+        </div>
+
+        <div className="mt-4 max-w-xl rounded-2xl border border-white/10 bg-white/[.04] p-6">
+          <p className="text-sm text-slate-400">Workspace logo</p>
+          <p className="mt-2 mb-5 text-sm leading-6 text-slate-500">
+            Add a small mark for {workspace.business_name}. Logos are private to your workspace.
+          </p>
+          <WorkspaceLogoManager initialUrl={logoUrl} hasLogo={Boolean(workspace.logo_path)} />
         </div>
       </section>
     </main>

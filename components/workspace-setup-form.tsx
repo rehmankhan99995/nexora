@@ -7,6 +7,7 @@ import { createWorkspaceAction } from "@/lib/workspace-actions";
 import { INDUSTRIES } from "@/lib/workspace";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { WorkspaceLogoPicker } from "@/components/workspace-logo-picker";
 import { useFormStatus } from "react-dom";
 
 function SubmitButton() {
@@ -35,7 +36,7 @@ export function WorkspaceSetupForm({ email }: { email?: string }) {
   }, [router, state.redirectTo]);
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} encType="multipart/form-data" className="space-y-6">
       <div>
         <label
           htmlFor="businessName"
@@ -101,6 +102,11 @@ export function WorkspaceSetupForm({ email }: { email?: string }) {
         <p id="industry-help" className="mt-2 text-xs text-slate-500">
           This helps shape the signals you see first.
         </p>
+      </div>
+
+      <div>
+        <p className="mb-2 block text-sm font-medium text-slate-200">Workspace logo</p>
+        <WorkspaceLogoPicker />
       </div>
 
       {state.error && (
