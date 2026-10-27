@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import { signInAction } from "@/lib/auth-actions";
@@ -16,6 +16,8 @@ function SubmitButton({ pending }: { pending: boolean }) {
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const workspaceMode = searchParams.get("mode") === "workspace";
   const [state, formAction] = useActionState(signInAction, {});
   const [showPassword, setShowPassword] = useState(false);
   const [pending, setPending] = useState(false);
@@ -50,7 +52,7 @@ export function LoginForm() {
   const formError = state.error ?? oauthError;
 
   return <div className="space-y-8">
-    <div><NexoraAvatar emotion={pending ? "loading" : emotion} statusText={pending ? "NEXORA AI Buddy is checking your sign-in." : undefined} /><p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">Workspace access</p><h2 className="text-center text-3xl font-semibold tracking-[-0.03em] text-white">Welcome back</h2><p className="mt-3 text-center text-sm leading-6 text-slate-400">Sign in to pick up where your team left off.</p></div>
+    <div><NexoraAvatar emotion={pending ? "loading" : emotion} statusText={pending ? "NEXORA AI Buddy is checking your sign-in." : undefined} /><p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">{workspaceMode ? "Workspace access" : "Profile access"}</p><h2 className="text-center text-3xl font-semibold tracking-[-0.03em] text-white">{workspaceMode ? "Welcome to your workspace" : "Welcome back"}</h2><p className="mt-3 text-center text-sm leading-6 text-slate-400">{workspaceMode ? "Sign in to continue to your NEXORA workspace." : "Sign in to manage your NEXORA profile."}</p></div>
     <form action={formAction} className="space-y-5">
       <div><label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-200">Work email</label><div className="relative"><Mail className="pointer-events-none absolute left-3 top-3.5 text-slate-500" size={17} /><Input id="email" name="email" type="email" autoComplete="email" required placeholder="you@company.com" onChange={edit} className="h-12 rounded-xl border-white/10 bg-white/[.04] pl-10 text-white placeholder:text-slate-600 focus-visible:ring-violet-400" /></div></div>
       <div><div className="mb-2 flex items-center justify-between"><label htmlFor="password" className="text-sm font-medium text-slate-200">Password</label><Link href="/forgot-password" className="text-xs text-violet-300 hover:text-violet-200">Forgot password?</Link></div><div className="relative"><LockKeyhole className="pointer-events-none absolute left-3 top-3.5 text-slate-500" size={17} /><Input id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" required onFocus={() => setEmotion("password")} onBlur={() => setEmotion("idle")} onChange={edit} className="h-12 rounded-xl border-white/10 bg-white/[.04] pl-10 pr-11 text-white focus-visible:ring-violet-400" /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"} className="absolute right-3 top-3 text-slate-500 hover:text-white">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div></div>

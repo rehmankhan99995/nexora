@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Check, Eye, EyeOff, LockKeyhole, Mail, UserRound } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import { signUpAction } from "@/lib/auth-actions";
@@ -12,6 +12,8 @@ import { GoogleAuthButton } from "@/components/google-auth-button";
 
 export function SignUpForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const workspaceMode = searchParams.get("mode") === "workspace";
   const [state, formAction] = useActionState(signUpAction, {});
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -36,7 +38,7 @@ export function SignUpForm() {
   const edit = () => setEmotion(state.error ? "idle" : "typing");
 
   return <div className="space-y-7">
-    <div><NexoraAvatar emotion={pending ? "loading" : emotion} statusText={pending ? "NEXORA AI Buddy is creating your account." : undefined} /><p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">Start with clarity</p><h2 className="text-center text-3xl font-semibold tracking-[-0.03em] text-white">Create your workspace account</h2><p className="mt-3 text-center text-sm leading-6 text-slate-400">Bring your team&apos;s operating rhythm into focus.</p></div>
+    <div><NexoraAvatar emotion={pending ? "loading" : emotion} statusText={pending ? "NEXORA AI Buddy is creating your account." : undefined} /><p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">{workspaceMode ? "Start with your workspace" : "Start with your profile"}</p><h2 className="text-center text-3xl font-semibold tracking-[-0.03em] text-white">{workspaceMode ? "Create your workspace account" : "Create your profile"}</h2><p className="mt-3 text-center text-sm leading-6 text-slate-400">{workspaceMode ? "Bring your team's operating rhythm into focus." : "Create your NEXORA identity before setting up a workspace."}</p></div>
     <form action={formAction} className="space-y-4">
       <div><label htmlFor="fullName" className="mb-2 block text-sm font-medium text-slate-200">Full name</label><div className="relative"><UserRound className="pointer-events-none absolute left-3 top-3.5 text-slate-500" size={17} /><Input id="fullName" name="fullName" autoComplete="name" required placeholder="Jordan Lee" onChange={edit} className="h-12 rounded-xl border-white/10 bg-white/[.04] pl-10 text-white placeholder:text-slate-600 focus-visible:ring-violet-400" /></div></div>
       <div><label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-200">Work email</label><div className="relative"><Mail className="pointer-events-none absolute left-3 top-3.5 text-slate-500" size={17} /><Input id="email" name="email" type="email" autoComplete="email" required placeholder="you@company.com" onChange={edit} className="h-12 rounded-xl border-white/10 bg-white/[.04] pl-10 text-white placeholder:text-slate-600 focus-visible:ring-violet-400" /></div></div>
