@@ -8,6 +8,7 @@ import {
 import type { Workspace } from "@/lib/workspace";
 import {
   deleteWorkspaceLogo,
+  isWorkspaceLogoFile,
   isWorkspaceLogoPath,
   uploadWorkspaceLogo,
   validateWorkspaceLogo,
@@ -117,8 +118,8 @@ export async function createWorkspaceAction(
   if (validationError) return { error: validationError };
 
   const logoEntry = formData.get("logo");
-  const logoFile = logoEntry instanceof File && logoEntry.size > 0 ? logoEntry : null;
-  if (logoEntry && !(logoEntry instanceof File)) {
+  const logoFile = isWorkspaceLogoFile(logoEntry) && logoEntry.size > 0 ? logoEntry : null;
+  if (logoEntry && !isWorkspaceLogoFile(logoEntry)) {
     return { error: "Choose a valid logo image." };
   }
 
@@ -234,7 +235,7 @@ export async function updateWorkspaceLogoAction(
   }
 
   const logoEntry = formData.get("logo");
-  const logoFile = logoEntry instanceof File && logoEntry.size > 0 ? logoEntry : null;
+  const logoFile = isWorkspaceLogoFile(logoEntry) && logoEntry.size > 0 ? logoEntry : null;
   const logoValidation = logoFile ? await validateWorkspaceLogo(logoFile) : null;
 
   if (!logoFile || !logoValidation || "error" in logoValidation) {

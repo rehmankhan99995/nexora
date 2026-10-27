@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ImagePlus, X } from "lucide-react";
 import { MAX_WORKSPACE_LOGO_BYTES } from "@/lib/workspace";
+import { useFormStatus } from "react-dom";
 
 const ACCEPTED_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
 
@@ -26,6 +27,8 @@ export function WorkspaceLogoPicker({
   initialUrl?: string | null;
   disabled?: boolean;
 }) {
+  const { pending } = useFormStatus();
+  const isDisabled = disabled || pending;
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl ?? null);
@@ -93,7 +96,7 @@ export function WorkspaceLogoPicker({
             type="file"
             accept="image/png,image/jpeg,image/webp"
             onChange={handleChange}
-            disabled={disabled}
+            disabled={isDisabled}
             className="sr-only"
           />
           <p className="mt-2 text-xs text-slate-500">PNG, JPEG, or WebP · 2 MB max · optional</p>
@@ -104,7 +107,7 @@ export function WorkspaceLogoPicker({
         <button
           type="button"
           onClick={clearSelectedFile}
-          disabled={disabled}
+          disabled={isDisabled}
           className="inline-flex items-center gap-1 text-xs text-slate-400 underline decoration-slate-600 underline-offset-4 hover:text-white disabled:opacity-50"
         >
           <X aria-hidden="true" size={13} />

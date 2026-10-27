@@ -14,6 +14,25 @@ const LOGO_TYPES = {
 
 type LogoExtension = (typeof LOGO_TYPES)[keyof typeof LOGO_TYPES];
 
+/**
+ * Server actions can receive a File created by a different runtime realm.
+ * A strict `instanceof File` check can therefore reject a valid upload even
+ * though the browser selected it correctly.
+ */
+export function isWorkspaceLogoFile(
+  value: FormDataEntryValue | null,
+): value is File {
+  if (!value || typeof value !== "object") return false;
+
+  const candidate = value as Partial<File>;
+  return (
+    typeof candidate.name === "string" &&
+    typeof candidate.type === "string" &&
+    typeof candidate.size === "number" &&
+    typeof candidate.arrayBuffer === "function"
+  );
+}
+
 function hasPngSignature(bytes: Uint8Array) {
   return [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a].every(
     (value, index) => bytes[index] === value,
@@ -45,7 +64,7 @@ function hasAllowedFilenameExtension(filename: string, mimeType: string) {
 }
 
 export async function validateWorkspaceLogo(fileValue: FormDataEntryValue | null) {
-  if (!(fileValue instanceof File) || fileValue.size === 0) {
+  if (!isWorkspaceLogoFile(fileValue) || fileValue.size === 0) {
     return { error: "Choose a PNG, JPEG, or WebP image to upload." } as const;
   }
 
