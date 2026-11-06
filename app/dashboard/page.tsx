@@ -84,6 +84,14 @@ export default async function DashboardPage({
           <WorkspaceSwitcher workspaces={workspaces} activeWorkspaceId={workspace.id} />
         </div>
 
+        {(workspace.role === "owner" || workspace.role === "admin") && (
+          <div className="mt-4">
+            <a href="/workspace/members" className="inline-flex rounded-xl border border-white/10 bg-white/[.04] px-4 py-3 text-sm text-slate-300 hover:bg-white/[.08] hover:text-white">
+              Manage workspace members
+            </a>
+          </div>
+        )}
+
         <div className="mt-4 max-w-xl rounded-2xl border border-white/10 bg-white/[.04] p-6">
           <p className="text-sm text-slate-400">Workspace logo</p>
           <p className="mt-2 mb-5 text-sm leading-6 text-slate-500">

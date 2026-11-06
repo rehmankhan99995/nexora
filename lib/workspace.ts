@@ -29,6 +29,14 @@ export type Workspace = {
 
 export type WorkspaceRole = "owner" | "admin" | "member";
 export type WorkspaceWithRole = Workspace & { role: WorkspaceRole };
+export type WorkspaceMember = {
+  id: string;
+  user_id: string;
+  role: WorkspaceRole;
+  created_at: string;
+  full_name: string;
+  email: string | null;
+};
 
 type WorkspaceFields = {
   businessName: string;
@@ -80,4 +88,43 @@ export async function getWorkspacesForUser(
     })) as WorkspaceWithRole[];
 
   return { data: workspaces, error };
+}
+
+export async function getWorkspaceMembers(
+  supabase: SupabaseClient,
+  workspaceId: string,
+) {
+  const { data: memberships, error: membershipError } = await supabase
+    .from("workspace_members")
+    .select("id, user_id, role, created_at")
+    .eq("workspace_id", workspaceId)
+    .order("created_at", { ascending: true });
+
+  if (membershipError || !memberships?.length) {
+    return { data: [] as WorkspaceMember[], error: membershipError };
+  }
+
+  const userIds = memberships.map((membership) => membership.user_id);
+  const { data: profiles, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, full_name, email")
+    .in("id", userIds);
+
+  const profileById = new Map(
+    (profiles ?? []).map((profile) => [profile.id, profile]),
+  );
+
+  const members = memberships.map((membership) => {
+    const profile = profileById.get(membership.user_id);
+    return {
+      id: membership.id,
+      user_id: membership.user_id,
+      role: membership.role as WorkspaceRole,
+      created_at: membership.created_at,
+      full_name: profile?.full_name ?? "NEXORA member",
+      email: profile?.email ?? null,
+    };
+  });
+
+  return { data: members, error: profileError };
 }
