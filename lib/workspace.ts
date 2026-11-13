@@ -121,7 +121,7 @@ export async function getWorkspaceMembers(
       user_id: membership.user_id,
       role: membership.role as WorkspaceRole,
       created_at: membership.created_at,
-      full_name: profile?.full_name ?? "Veyrova member",
+      full_name: profile?.full_name ?? "NEXORA member",
       email: profile?.email ?? null,
     };
   });

@@ -9,7 +9,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Veyrova | AI Business Operations Hub",
+  title: "NEXORA | AI Business Operations Hub",
   description: "A clearer operating rhythm for modern teams.",
 };
 

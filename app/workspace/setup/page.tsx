@@ -33,7 +33,7 @@ export default async function WorkspaceSetupPage() {
             <span className="flex size-9 items-center justify-center rounded-xl bg-violet-300 text-[#16142c]">
               <Command aria-hidden="true" size={18} />
             </span>
-            VEYROVA
+            NEXORA
           </Link>
           <span className="text-xs text-slate-500">Step 1 of 1</span>
         </div>
@@ -48,7 +48,7 @@ export default async function WorkspaceSetupPage() {
             Start with a clear view of your business.
           </h1>
           <p className="mt-5 max-w-lg text-lg leading-8 text-slate-400">
-            Tell us a little about your business and we&apos;ll shape your Veyrova workspace around the way you operate.
+            Tell us a little about your business and we&apos;ll shape your NEXORA workspace around the way you operate.
           </p>
           <div className="mt-10 grid gap-3 text-sm text-slate-200 sm:grid-cols-2">
             <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[.04] px-4 py-3">
