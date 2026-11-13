@@ -25,7 +25,7 @@ export function NexoraAvatar({
   decorative = true,
   className = "",
 }: NexoraAvatarProps) {
-  const label = statusText ?? `NEXORA AI Buddy: ${emotion}`;
+  const label = statusText ?? `VEYROVA AI Buddy: ${emotion}`;
 
   return (
     <div className={`nexora-avatar-wrap ${className}`}>

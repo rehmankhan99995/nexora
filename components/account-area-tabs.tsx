@@ -16,7 +16,7 @@ export function AccountAreaTabs() {
   }
 
   return (
-    <div className="mb-8 grid grid-cols-2 rounded-xl border border-white/10 bg-white/[.03] p-1" role="tablist" aria-label="NEXORA account area">
+    <div className="mb-8 grid grid-cols-2 rounded-xl border border-white/10 bg-white/[.03] p-1" role="tablist" aria-label="VEYROVA account area">
       <Link href={tabHref("profile")} role="tab" aria-selected={activeTab === "profile"} className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm transition ${activeTab === "profile" ? "bg-violet-300 font-semibold text-[#16142c]" : "text-slate-400 hover:bg-white/[.05] hover:text-white"}`}>
         <UserRound size={15} /> Profile
       </Link>

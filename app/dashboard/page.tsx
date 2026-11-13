@@ -43,7 +43,7 @@ export default async function DashboardPage({
             <span className="flex size-9 items-center justify-center rounded-xl bg-violet-300 text-[#16142c]">
               <Command aria-hidden="true" size={18} />
             </span>
-            NEXORA
+            VEYROVA
           </div>
           <LogoutButton />
         </div>
@@ -57,7 +57,7 @@ export default async function DashboardPage({
           Good to see you, {name}.
         </h1>
         <p className="mt-5 max-w-xl text-lg leading-8 text-slate-400">
-          Your workspace is ready. The next phase of NEXORA will bring your most important signals into one calm, actionable view.
+          Your workspace is ready. The next phase of Veyrova will bring your most important signals into one calm, actionable view.
         </p>
 
         <div className="mt-12 grid gap-4 md:grid-cols-3">
