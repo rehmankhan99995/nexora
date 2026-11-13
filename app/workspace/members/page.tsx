@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getWorkspaceForUser, getWorkspaceMembers } from "@/lib/workspace";
 import { WorkspaceMemberManager } from "@/components/workspace-member-manager";
 
+export const instant = false;
+
 export default async function WorkspaceMembersPage() {
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();

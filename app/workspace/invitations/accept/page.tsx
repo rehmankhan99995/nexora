@@ -4,6 +4,8 @@ import { Command } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AcceptWorkspaceInvitationForm } from "@/components/accept-workspace-invitation-form";
 
+export const instant = false;
+
 export default async function AcceptWorkspaceInvitationPage({ searchParams }: { searchParams?: Promise<{ token?: string }> }) {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
